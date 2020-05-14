@@ -1,11 +1,13 @@
 {
     "name": "sfire-framework/sfire-cache",
     "description": "Temporarily save and retrieve data to cache using file system, APCu or Redis.",
+    "homepage": "https://sfire.io",
     "keywords": [
         "framework",
         "sfire",
         "cache",
         "file system",
+        "files",
         "apc",
         "apcu",
         "redis"
@@ -19,9 +21,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "sfire-framework/sfire-filecontrol": ">=1.0.0",
-        "ext-apcu": "*",
-        "ext-json": "*"
+        "sfire-framework/sfire-filecontrol": "1.0.*"
     },
     "require-dev": {
         "phpunit/phpunit": "^8"

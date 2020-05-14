@@ -10,7 +10,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use sFire\Cache\Adapter\APCu;
+use sFire\Cache\Adapter\Apcu;
 
 
 final class ApcuTest extends TestCase {

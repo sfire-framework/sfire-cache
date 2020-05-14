@@ -62,7 +62,7 @@ class Redis extends CacheAbstract {
 	 */
 	public function __destruct() {
 
-		if(null !== $this -> connection) {
+		if(null !== $this -> connection && false === is_bool($this -> connection)) {
 			fclose($this -> connection);
 		}
 	}
