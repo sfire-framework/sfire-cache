@@ -82,12 +82,12 @@ class Redis extends CacheAbstract {
 
 	/**
 	 * Sets the port of the Redis server
-	 * @param int $port The port of the Redis server
+	 * @param int $portNumber The port of the Redis server
 	 * @return self
 	 */
-	public function setPort(?int $port): self {
+	public function setPort(?int $portNumber): self {
 		
-		$this -> port = $port;
+		$this -> port = $portNumber;
 		return $this;
 	}
 
@@ -120,15 +120,15 @@ class Redis extends CacheAbstract {
      * Sets new cache data by key name
      * @param mixed $key The unique name of the cache
      * @param mixed $value The value of the cache
-     * @param int $expiration [optional] Time in milliseconds (default 5 minutes)
+     * @param int $milliseconds [optional] Time in milliseconds (default 5 minutes)
      * @return self
      */
-	public function set($key, $value, ?int $expiration = 300000): self {
+	public function set($key, $value, ?int $milliseconds = 300000): self {
 
 		$this -> command('set', [$key, $value]);
 		
-		if(null !== $expiration) {
-			$this -> touch($key, $expiration);
+		if(null !== $milliseconds) {
+			$this -> touch($key, $milliseconds);
 		}
 
 		return $this;
@@ -186,12 +186,12 @@ class Redis extends CacheAbstract {
     /**
      * Resets lifetime of a cached entry
      * @param mixed $key The unique name of the cache
-     * @param int $expiration Time in milliseconds
+     * @param int $milliseconds [optional] Time in milliseconds
      * @return self
      */
-	public function touch($key, int $expiration): self {
+	public function touch($key, ?int $milliseconds = 300000): self {
 
-		$this -> command('pexpire', [$key, $expiration]);
+		$this -> command('pexpire', [$key, $milliseconds]);
 		return $this;
 	}
 
