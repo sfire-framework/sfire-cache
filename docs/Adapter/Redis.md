@@ -4,7 +4,7 @@
 - [Installation](#installation)
 - [Setup](#setup)
     - [Namespace](#namespace)
-    - [Instance](#installation)
+    - [Instance](#instance)
     - [Configuration](#configuration)
 - [Usage](#usage)
     - [Retrieving data from cache](#retrieving-data-from-cache)
