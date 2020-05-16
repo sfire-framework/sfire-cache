@@ -1,6 +1,7 @@
 # FileSystem Cache Adapter
 
 - [Introduction](#introduction)
+- [Requirements](#requirements)
 - [Installation](#installation)
 - [Setup](#setup)
     - [Namespace](#namespace)
@@ -22,6 +23,10 @@
 
 ## Introduction
 FileSystem Cache Adapter is based on storing cache in files locally. The cache is accessed through an easy interface for storing and retrieving temporary data. When you perform an expensive operation, like reading a file or fetch a network resource, you can store the result in the user cache to speed up a later request of the same object. Cache files will be removed based on a [probability](#probability) for performance benefits so that PHP doesn't clear the cache with every request. You may adjust this probability by your needs.    
+
+
+## Requirements
+There are no requirements for this package.
 
 
 ## Installation
@@ -224,7 +229,7 @@ $cache -> get('foo'); //Returns null
 ```php
 function isIpBruteForcing() {
 
-    $cache  = new Redis(); //Create new Redis cache instance
+    $cache  = new FileSystem(); //Create new FileSystem cache instance
     $key    = 'anti-brute-force-' .  $_SERVER['REMOTE_ADDR']; //Define a key with the client IP address
     $amount = $cache -> get($key, 0); //Retrieve the amount of hits, default 0
     $cache -> set($key, $amount++, 10000); //Increase the amount and store it in cache

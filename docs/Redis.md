@@ -1,6 +1,7 @@
 # Redis Cache Adapter
 
 - [Introduction](#introduction)
+- [Requirements](#requirements)
 - [Installation](#installation)
 - [Setup](#setup)
     - [Namespace](#namespace)
@@ -22,6 +23,10 @@
 
 ## Introduction
 [Redis](https://redis.io/) is an open source, in-memory data structure store, used as a database, cache and message broker. The Redis Cache Adapter provides an easy-to-use interface for retrieving and setting data using a Redis cache instance. This instance may be installed locally or even be on a different network.   
+
+
+## Requirements
+There are no requirements for this package.
 
 
 ## Installation

@@ -1,6 +1,7 @@
 # Apcu Cache Adapter
 
 - [Introduction](#introduction)
+- [Requirements](#requirements)
 - [Installation](#installation)
 - [Setup](#setup)
     - [Namespace](#namespace)
@@ -24,6 +25,10 @@ Apcu Cache Adapter is based on storing cache in [APCU](https://www.php.net/apcu)
 The only downside of APCu is that it’s local to the machine it runs on, and local to the PHP process and system. This means that if you use PHP as a FastCGI process (e.g. Nginx and php-fpm) every PHP process will have its own cache. Unless you expect to run your application on multiple servers or processes APCU is a good caching mechanism.     
 
 
+## Requirements
+- [APCU](https://www.php.net/manual/en/book.apcu.php) should be installed
+
+
 ## Installation
 Install this package using [Composer](https://getcomposer.org/):
 ```shell script
@@ -34,7 +39,7 @@ composer require sfire-framework/sfire-cache
 ## Setup
 ### Namespace
 ```php
-use sFire\Cache\Adapter\FileSystem;
+use sFire\Cache\Adapter\Apcu;
 ```
 
 ### Instance
@@ -161,7 +166,7 @@ $cache -> get('foo'); //Returns null
 ```php
 function isIpBruteForcing() {
 
-    $cache  = new Redis(); //Create new Redis cache instance
+    $cache  = new Apcu(); //Create new Apcu cache instance
     $key    = 'anti-brute-force-' .  $_SERVER['REMOTE_ADDR']; //Define a key with the client IP address
     $amount = $cache -> get($key, 0); //Retrieve the amount of hits, default 0
     $cache -> set($key, $amount++, 10000); //Increase the amount and store it in cache
