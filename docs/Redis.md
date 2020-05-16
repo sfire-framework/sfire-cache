@@ -63,7 +63,7 @@ You may set the host which the cache adapter should connect to by calling the `s
 ```php
 $cache -> setHost(string $host);
 ```
-###### Example
+###### Example: Set the host to an IP address
 ```php
 $cache -> setHost('192.168.1.250');
 ```
@@ -74,7 +74,7 @@ Redis may be protected with a password. Use the  `setPassword()` method to set t
 ```php
 $cache -> setPassword(string $password);
 ```
-##### Example
+##### Example: Set the password for the Redis server
 ```php
 $cache -> setPassword('password');
 ```
@@ -85,7 +85,7 @@ You can set the port which a Redis instance is listening by using the  `setPort(
 ```php
 $cache -> setPort(int $portNumber);
 ```
-##### Example
+##### Example: Set the port number
 ```php
 $cache -> setPort(5000);
 ```
@@ -96,7 +96,7 @@ You may set a connection timeout by using the `setTimeout()` method. If a connec
 ```php
 $cache -> setTimeout(float $seconds);
 ```
-##### Example
+##### Example: Set the timeout in seconds
 ```php
 $cache -> setTimeout(5.5);
 ```
@@ -234,7 +234,7 @@ $cache -> get('foo'); //Returns null
 
 ## Examples
 
-### Example anti-brute force based on remote ip address
+### Anti-brute force based on remote ip address
 ```php
 function isIpBruteForcing() {
 

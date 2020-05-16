@@ -84,11 +84,11 @@ Cache is stored as files with a extension. You can set this extension by using t
 ```php
 $cache -> setExtension(string $extension);
 ```
-##### Example 1
+##### Example 1: Set the extension with leading dot
 ```php
 $cache -> setExtension('.tmp');
 ```
-##### Example 2
+##### Example 2: Set the extension without leading dot
 You may also remove the leading dot.
 ```php
 $cache -> setExtension('tmp');
@@ -225,7 +225,7 @@ $cache -> get('foo'); //Returns null
 
 ## Examples
 
-### Example anti-brute force based on remote ip address
+### Anti-brute force based on remote ip address
 ```php
 function isIpBruteForcing() {
 

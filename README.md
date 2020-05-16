@@ -3,7 +3,7 @@ Requires PHP 7.4 or later; we recommend using the latest PHP version whenever po
 
 
 ### Current version
-The current version is 1.0.3
+The current version is 1.0.4
 
 
 ### Installation
@@ -11,6 +11,9 @@ Run the following to install this library:
 ```
 $ composer require sfire-framework/sfire-cache
 ```
+
+### Documentation
+Documentation can be found in the [docs](docs) folder
 
 
 ### Questions and Feedback

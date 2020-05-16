@@ -162,7 +162,7 @@ $cache -> get('foo'); //Returns null
 
 ## Examples
 
-### Example anti-brute force based on remote ip address
+### wAnti-brute force based on remote ip address
 ```php
 function isIpBruteForcing() {
 
