@@ -21,33 +21,47 @@
     - [Data types](#data-types)
 
 
+
 ## Introduction
+
 [Redis](https://redis.io/) is an open source, in-memory data structure store, used as a database, cache and message broker. The Redis Cache Adapter provides an easy-to-use interface for retrieving and setting data using a Redis cache instance. This instance may be installed locally or even be on a different network.   
 
 
+
 ## Requirements
+
 There are no requirements for this package.
 
 
+
 ## Installation
+
 Install this package using [Composer](https://getcomposer.org/):
 ```shell script
 composer require sfire-framework/sfire-cache
 ```
 
 
+
 ## Setup
+
 ### Namespace
 ```php
 use sFire\Cache\Adapter\Redis;
 ```
 
+
+
 ### Instance
+
 ```php
 $cache = new Redis();
 ```
 
+
+
 ### Configuration
+
 Below are the default values that the package uses.
 
 #### Default settings
@@ -56,7 +70,10 @@ Below are the default values that the package uses.
 - Default port is 6379
 - Default connection timeout is 2.5 seconds 
 
+
+
 #### Overwriting settings
+
 ##### Host
 You may set the host which the cache adapter should connect to by calling the `setHost()` method. This can be a host name or IP address which sFire will connect to.
 ###### Syntax
@@ -68,7 +85,10 @@ $cache -> setHost(string $host);
 $cache -> setHost('192.168.1.250');
 ```
 
+
+
 ##### Password
+
 Redis may be protected with a password. Use the  `setPassword()` method to set the Redis password.
 ##### Syntax
 ```php
@@ -79,7 +99,10 @@ $cache -> setPassword(string $password);
 $cache -> setPassword('password');
 ```
 
+
+
 ##### Port
+
 You can set the port which a Redis instance is listening by using the  `setPort()` method.
 ##### Syntax
 ```php
@@ -90,7 +113,10 @@ $cache -> setPort(int $portNumber);
 $cache -> setPort(5000);
 ```
 
+
+
 ##### Timeout
+
 You may set a connection timeout by using the `setTimeout()` method. If a connection could not be established within this time, an Exception will be thrown.
 ##### Syntax
 ```php
@@ -100,6 +126,7 @@ $cache -> setTimeout(float $seconds);
 ```php
 $cache -> setTimeout(5.5);
 ```
+
 
 
 ## Usage
@@ -127,7 +154,9 @@ $cache -> get('quez', 'baz'); //Output "baz"
 ```
 
 
+
 #### Storing data in cache
+
 Storing data will always require a key for retrieval of the data after storing. Data is serialized for data type dependency. If you store an integer, it will come out as an integer. See the [Types of data](#types-of-data)" section for compatible data types.
 The default expiration is 300000 milliseconds (5 minutes). Expiration will always be the amount of milliseconds from the moment of store.
 
@@ -143,7 +172,9 @@ $cache -> get('foo'); //Output: "bar"
 ```
 
 
+
 #### Removing data from cache
+
 You can manually expire keys by calling the `expire()` method. The data is no longer available due to permanent deletion and thus cannot be recovered.
 
 ##### Syntax
@@ -160,7 +191,9 @@ $cache -> get('foo'); //Output null
 ```
 
 
+
 #### Renewing expiration of stored data
+
 The `touch()` method can renew the expiration time of a stored data based on a given key. Time is in milliseconds.
 
 ##### Syntax
@@ -183,7 +216,9 @@ $cache -> touch('foo', 4000); //Set new lifetime for 4 seconds
 ```
 
 
+
 #### Check if cache exists
+
 The `exists()` method will return a bool `true` or `false` if cache exists based on a given key.
 
 ##### Syntax
@@ -200,7 +235,9 @@ $cache -> exists('foo'); //Returns true
 ```
 
 
+
 #### Retrieve the expiration time
+
 The `getExpiration()` method returns the remaining time to live based on a given key.
 
 ##### Syntax
@@ -216,7 +253,9 @@ $cache -> getExpiration('foo'); //Returns 1000
 ```
 
 
+
 #### Clear all cache data
+
 The `clear()` method will delete all stored cache data.  The data is no longer available due to permanent deletion and thus cannot be recovered.
 
 ##### Syntax
@@ -230,6 +269,7 @@ $cache -> set('foo', 'bar');
 $cache -> clear();
 $cache -> get('foo'); //Returns null
 ```
+
 
 
 ## Examples
@@ -249,6 +289,8 @@ function isIpBruteForcing() {
 isIpBruteForcing();
 ```
 
+
+
 ## Notes
 
 ### Chaining
@@ -257,13 +299,16 @@ Most of the provided methods may be chained together:
 $cache -> set('foo', 'bar') -> exists();
 ```
 
+
+
 ### Data types
+
 The following data is supported for storing:
 
 - Strings - Character strings of arbitrary size in any PHP-compatible encoding.
 - Integers - All integers of any size supported by PHP, up to 64-bit signed.
 - Floats - All signed floating-point values.
-- Boolean - True and False.
+- Boolean - True and false.
 - Null - The actual null value.
 - Arrays - Indexed, associative and multidimensional arrays of arbitrary depth.
-- Object - Any object that supports lossless serialization and deserialization such that $o == unserialize(serialize($o)). Objects may leverage PHP's Serializable interface, __sleep() or __wakeup() magic methods.
+- Object - Any object that supports lossless serialization and deserialization such that `$o == unserialize(serialize($o))`. Objects may leverage PHP's Serializable interface, `__sleep()` or `__wakeup()` magic methods.

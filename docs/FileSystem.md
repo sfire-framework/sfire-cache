@@ -21,33 +21,47 @@
     - [Data types](#data-types)
 
 
+
 ## Introduction
+
 FileSystem Cache Adapter is based on storing cache in files locally. The cache is accessed through an easy interface for storing and retrieving temporary data. When you perform an expensive operation, like reading a file or fetch a network resource, you can store the result in the user cache to speed up a later request of the same object. Cache files will be removed based on a [probability](#probability) for performance benefits so that PHP doesn't clear the cache with every request. You may adjust this probability by your needs.    
 
 
+
 ## Requirements
+
 There are no requirements for this package.
 
 
+
 ## Installation
+
 Install this package using [Composer](https://getcomposer.org/):
 ```shell script
 composer require sfire-framework/sfire-cache
 ```
 
 
+
 ## Setup
+
 ### Namespace
 ```php
 use sFire\Cache\Adapter\FileSystem;
 ```
 
+
+
 ### Instance
+
 ```php
 $cache = new FileSystem();
 ```
 
+
+
 ### Configuration
+
 Below are the default values that the package uses.
 
 #### Default settings
@@ -55,7 +69,10 @@ Below are the default values that the package uses.
 - Default directory is null
 - Default extension is ".cache"
 
+
+
 #### Overwriting settings
+
 ##### Probability
 The FileSystem cache adapter will store cache locally on the file systeem in files. Cache will be removed based on a probability. You may set this probabilityby using the `setProbability()` method. The higher the number, the lower the chance the cache will be cleared. Set to 0 to disable automatic cache clearing Set to 1 to automatic clear the cache on every request.
 ###### Syntax
@@ -67,7 +84,10 @@ $cache -> setProbability(int $probability);
 $cache -> setProbability(3);
 ```
 
+
+
 ##### Directory
+
 Use the  `setDirectory()` method to set the directory where all cache files will be saved.
 ##### Syntax
 ```php
@@ -78,7 +98,10 @@ $cache -> setDirectory(string $directory);
 $cache -> setDirectory('/var/www/data/cache/');
 ```
 
+
+
 ##### Extension
+
 Cache is stored as files with a extension. You can set this extension by using the `setExtension()` method.
 ##### Syntax
 ```php
@@ -93,6 +116,7 @@ You may also remove the leading dot.
 ```php
 $cache -> setExtension('tmp');
 ```
+
 
 
 ## Usage
@@ -120,7 +144,9 @@ $cache -> get('quez', 'baz'); //Output "baz"
 ```
 
 
+
 #### Storing data in cache
+
 Storing data will always require a key for retrieval of the data after storing. Data is serialized for data type dependency. If you store an integer, it will come out as an integer. See the [Types of data](#types-of-data)" section for compatible data types.
 The default expiration is 300000 milliseconds (5 minutes). Expiration will always be the amount of milliseconds from the moment of store.
 
@@ -136,7 +162,9 @@ $cache -> get('foo'); //Output: "bar"
 ```
 
 
+
 #### Removing data from cache
+
 You can manually expire keys by calling the `expire()` method. The data is no longer available due to permanent deletion and thus cannot be recovered.
 
 ##### Syntax
@@ -153,7 +181,9 @@ $cache -> get('foo'); //Output null
 ```
 
 
+
 #### Renewing expiration of stored data
+
 The `touch()` method can renew the expiration time of a stored data based on a given key. Time is in milliseconds.
 
 ##### Syntax
@@ -176,7 +206,9 @@ $cache -> touch('foo', 4000); //Set new lifetime for 4 seconds
 ```
 
 
+
 #### Check if cache exists
+
 The `exists()` method will return a bool `true` or `false` if cache exists based on a given key.
 
 ##### Syntax
@@ -191,7 +223,10 @@ $cache -> set('foo', 'bar');
 $cache -> exists('foo'); //Returns true
 ```
 
+
+
 #### Retrieve the expiration time
+
 The `getExpiration()` method returns the remaining time to live based on a given key.
 
 ##### Syntax
@@ -207,7 +242,9 @@ $cache -> getExpiration('foo'); //Returns 1000
 ```
 
 
+
 #### Clear all cache data
+
 The `clear()` method will delete all stored cache data.  The data is no longer available due to permanent deletion and thus cannot be recovered.
 
 ##### Syntax
@@ -221,6 +258,7 @@ $cache -> set('foo', 'bar');
 $cache -> clear();
 $cache -> get('foo'); //Returns null
 ```
+
 
 
 ## Examples
@@ -240,6 +278,8 @@ function isIpBruteForcing() {
 isIpBruteForcing();
 ```
 
+
+
 ## Notes
 
 ### Chaining
@@ -248,13 +288,17 @@ Most of the provided methods may be chained together:
 $cache -> set('foo', 'bar') -> exists();
 ```
 
+
+
 ### Data types
+
 The following data is supported for storing:
 
 - Strings - Character strings of arbitrary size in any PHP-compatible encoding.
 - Integers - All integers of any size supported by PHP, up to 64-bit signed.
 - Floats - All signed floating-point values.
-- Boolean - True and False.
+- Boolean - True and false.
 - Null - The actual null value.
 - Arrays - Indexed, associative and multidimensional arrays of arbitrary depth.
-- Object - Any object that supports lossless serialization and deserialization such that $o == unserialize(serialize($o)). Objects may leverage PHP's Serializable interface, __sleep() or __wakeup() magic methods.
+- Object - Any object that supports lossless serialization and deserialization such that `$o == unserialize(serialize($o))`. Objects may leverage PHP's Serializable interface, `__sleep()` or `__wakeup()` magic methods.
+

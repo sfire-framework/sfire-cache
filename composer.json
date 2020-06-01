@@ -1,6 +1,6 @@
 {
     "name": "sfire-framework/sfire-cache",
-    "description": "Temporarily save and retrieve data to cache using file system, APCu or Redis.",
+    "description": "Temporarily save and retrieve data to and from cache using file system, APCu or Redis.",
     "homepage": "https://sfire.io",
     "keywords": [
         "framework",
