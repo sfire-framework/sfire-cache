@@ -105,7 +105,7 @@ class FileSystem extends CacheAbstract {
 
 		$files = glob($this -> directory . $this -> generateName($key));
 
-		if(count($files) > 0 && true === is_array($files)) {
+		if(true === is_array($files)) {
 			
 			foreach($files as $file) {
 				
@@ -134,7 +134,7 @@ class FileSystem extends CacheAbstract {
 
 		$files = glob($this -> directory . $this -> generateName($key));
 
-		if(true === is_array($files) && count($files) > 0) {
+		if(count($files) > 0 && true === is_array($files)) {
 
 			$file 		= new File($files[0]);
 			$expiration = $this -> extractExpiration($file);
@@ -160,7 +160,7 @@ class FileSystem extends CacheAbstract {
 
 		$files = glob($this -> directory . $this -> generateName($key));
 
-		if(true === is_array($files) && count($files) > 0) {
+		if(count($files) > 0 && true === is_array($files)) {
 
 			$file 		= new File($files[0]);
 			$expiration = $this -> extractExpiration($file);
@@ -185,7 +185,7 @@ class FileSystem extends CacheAbstract {
 
 		$files = glob($this -> directory . $this -> generateName($key));
 
-		if(true === is_array($files) && count($files) > 0) {
+		if(count($files) > 0 && true === is_array($files)) {
 
 			$file = new File($files[0]);
 			$file -> delete();
@@ -224,7 +224,7 @@ class FileSystem extends CacheAbstract {
 
 		$files = glob($this -> directory . '*');
 		
-		if(true === is_array($files) && count($files) > 0) {
+		if(true === is_array($files)) {
 
 			foreach($files as $file) {
 			  	
@@ -300,7 +300,7 @@ class FileSystem extends CacheAbstract {
 	 * @return string
 	 */
 	private function generateName($key, ?int $expiration = null): string {
-		return md5(serialize($key)) . '-' . ($expiration ? $expiration : '*') . '-' . ($expiration ? (microtime(true) + ($expiration / 1000)) : '*') . $this -> extension;
+		return md5(serialize($key)) . '-' . ($expiration ? (string) $expiration : '*') . '-' . ($expiration ? (microtime(true) + ($expiration / 1000)) : '*') . $this -> extension;
 	}
 
 

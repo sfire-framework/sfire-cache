@@ -147,7 +147,7 @@ $cache -> get('quez', 'baz'); //Output "baz"
 
 #### Storing data in cache
 
-Storing data will always require a key for retrieval of the data after storing. Data is serialized for data type dependency. If you store an integer, it will come out as an integer. See the [Types of data](#types-of-data)" section for compatible data types.
+Storing data will always require a key for retrieval of the data after storing. Data is serialized for data type dependency. If you store an integer, it will come out as an integer. See the [Types of data](#data-types)" section for compatible data types.
 The default expiration is 300000 milliseconds (5 minutes). Expiration will always be the amount of milliseconds from the moment of store.
 
 ##### Syntax

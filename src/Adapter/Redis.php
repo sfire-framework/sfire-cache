@@ -251,7 +251,7 @@ class Redis extends CacheAbstract {
 				$arg = json_encode($arg, JSON_INVALID_UTF8_IGNORE);
 			}
 
-			$command[] = '$' . strlen($arg);
+			$command[] = '$' . strlen((string) $arg);
 			$command[] = $arg;
 		}
 
