@@ -22,74 +22,74 @@ use sFire\FileControl\File;
  * @package sFire\Cache
  */
 class FileSystem extends CacheAbstract {
-	
 
-	/**
-	 * Contains the probability that all expired cache files will be cleared
+
+    /**
+     * Contains the probability that all expired cache files will be cleared
      * The higher the number, the lower the chance the cache will be cleared
-	 * @var int
-	 */
-	private int $probability = 5;
+     * @var int
+     */
+    private int $probability = 5;
 
 
-	/**
-	 * Contains the path of the cache directory
-	 * @var string
-	 */
-	private ?string $directory = null;
+    /**
+     * Contains the path of the cache directory
+     * @var string
+     */
+    private ?string $directory = null;
 
 
-	/**
-	 * Contains the file extension for the cache file
-	 * @var string
-	 */
-	private string $extension = '.cache';
+    /**
+     * Contains the file extension for the cache file
+     * @var string
+     */
+    private string $extension = '.cache';
 
 
-	/**
-	 * Sets the probability
-	 * @param int $probability The higher the number, the lower the chance the cache will be cleared. Set to 0 to disable automatic cache clearing.
-	 * @return self
-	 */
-	public function setProbability(int $probability): self {
-		
-		$this -> probability = $probability;
-		return $this;
-	}
+    /**
+     * Sets the probability
+     * @param int $probability The higher the number, the lower the chance the cache will be cleared. Set to 0 to disable automatic cache clearing.
+     * @return self
+     */
+    public function setProbability(int $probability): self {
+
+        $this -> probability = $probability;
+        return $this;
+    }
 
 
-	/**
-	 * Sets the cache file extension
-	 * @param string $extension The extension with or without leading dot.
-	 * @return self
-	 */
-	public function setExtension(string $extension): self {
-		
-		$this -> extension = '.' . ltrim($extension, '.');
-		return $this;
-	}
+    /**
+     * Sets the cache file extension
+     * @param string $extension The extension with or without leading dot.
+     * @return self
+     */
+    public function setExtension(string $extension): self {
+
+        $this -> extension = '.' . ltrim($extension, '.');
+        return $this;
+    }
 
 
-	/**
-	 * Sets the directory where all cache files will be saved
-	 * @param string $directory The path of the cache directory
-	 * @return self
+    /**
+     * Sets the directory where all cache files will be saved
+     * @param string $directory The path of the cache directory
+     * @return self
      * @throws RuntimeException
-	 */
-	public function setDirectory(string $directory): self {
+     */
+    public function setDirectory(string $directory): self {
 
-		if(false === is_writable($directory)) {
-			throw new RuntimeException(sprintf('Cache folder "%s" is not writable', $directory));
-		}
+        if(false === is_writable($directory)) {
+            throw new RuntimeException(sprintf('Cache folder "%s" is not writable', $directory));
+        }
 
-		if(false === is_readable($directory)) {
-			throw new RuntimeException(sprintf('Cache folder "%s" is not readable', $directory));
-		}
-		
-		$this -> directory = rtrim($directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        if(false === is_readable($directory)) {
+            throw new RuntimeException(sprintf('Cache folder "%s" is not readable', $directory));
+        }
 
-		return $this;
-	}
+        $this -> directory = rtrim($directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
+        return $this;
+    }
 
 
     /**
@@ -99,27 +99,27 @@ class FileSystem extends CacheAbstract {
      * @param int $expiration [optional] Time in milliseconds (default 5 minutes)
      * @return self
      */
-	public function set($key, $value, ?int $expiration = 300000): self {
+    public function set($key, $value, ?int $expiration = 300000): self {
 
-		$this -> garbage();
+        $this -> garbage();
 
-		$files = glob($this -> directory . $this -> generateName($key));
+        $files = glob($this -> directory . $this -> generateName($key));
 
-		if(true === is_array($files)) {
-			
-			foreach($files as $file) {
-				
-				$file = new File($file);
-				$file -> delete();
-			}
-		}
+        if(true === is_array($files)) {
 
-		$cache = new File($this -> directory . $this -> generateName($key, $expiration));
-		$cache -> create();
-		$cache -> append(serialize($value));
+            foreach($files as $file) {
 
-		return $this;
-	}
+                $file = new File($file);
+                $file -> delete();
+            }
+        }
+
+        $cache = new File($this -> directory . $this -> generateName($key, $expiration));
+        $cache -> create();
+        $cache -> append(serialize($value));
+
+        return $this;
+    }
 
 
     /**
@@ -128,214 +128,214 @@ class FileSystem extends CacheAbstract {
      * @param mixed $default [optional] Value returned when cache could not be found
      * @return mixed
      */
-	public function get($key, $default = null) {
+    public function get($key, $default = null) {
 
-		$this -> garbage();
+        $this -> garbage();
 
-		$files = glob($this -> directory . $this -> generateName($key));
+        $files = glob($this -> directory . $this -> generateName($key));
 
-		if(count($files) > 0 && true === is_array($files)) {
+        if(count($files) > 0 && true === is_array($files)) {
 
-			$file 		= new File($files[0]);
-			$expiration = $this -> extractExpiration($file);
+            $file 		= new File($files[0]);
+            $expiration = $this -> extractExpiration($file);
 
-			//Check if expiration date is not overdue
-			if($expiration -> getTime() >= microtime(true)) {
-				return unserialize($file -> getContent() ?? '');
-			}
+            //Check if expiration date is not overdue
+            if($expiration -> getTime() >= microtime(true)) {
+                return unserialize($file -> getContent() ?? '');
+            }
 
-			$file -> delete();
-		}
+            $file -> delete();
+        }
 
-		return $default;
-	}
-
-
-	/**
-	 * Returns the expiration time and the time when the cache file was created
-	 * @param mixed $key The unique name of the cache data
-	 * @return null|Expiration
-	 */
-	public function getExpiration($key): ?Expiration {
-
-		$files = glob($this -> directory . $this -> generateName($key));
-
-		if(count($files) > 0 && true === is_array($files)) {
-
-			$file 		= new File($files[0]);
-			$expiration = $this -> extractExpiration($file);
-
-			if($expiration -> getTime() >= microtime(true)) {
-				return $expiration;
-			}
-
-			$file -> delete();
-		}
-
-		return null;
-	}
+        return $default;
+    }
 
 
-	/**
-	 * Expires cache data based on key
-	 * @param mixed $key The unique name of the cache
-	 * @return self
-	 */
-	public function expire($key): self {
+    /**
+     * Returns the expiration time and the time when the cache file was created
+     * @param mixed $key The unique name of the cache data
+     * @return null|Expiration
+     */
+    public function getExpiration($key): ?Expiration {
 
-		$files = glob($this -> directory . $this -> generateName($key));
+        $files = glob($this -> directory . $this -> generateName($key));
 
-		if(count($files) > 0 && true === is_array($files)) {
+        if(count($files) > 0 && true === is_array($files)) {
 
-			$file = new File($files[0]);
-			$file -> delete();
-		}
+            $file 		= new File($files[0]);
+            $expiration = $this -> extractExpiration($file);
 
-		return $this;
-	}
+            if($expiration -> getTime() >= microtime(true)) {
+                return $expiration;
+            }
 
+            $file -> delete();
+        }
 
-	/**
-	 * Clears all cache data
-	 * @return self
-	 */
-	public function clear(): self {
-
-		$files = glob($this -> directory . '*');
-
-		if(true === is_array($files)) {
-
-			foreach($files as $file) {
-
-				$file = new File($file);
-				$file -> delete();
-			}
-		}
-
-		return $this;
-	}
+        return null;
+    }
 
 
-	/**
-	 * Clears all expired cache
-	 * @return self
-	 */
-	public function clearExpired(): self {
+    /**
+     * Expires cache data based on key
+     * @param mixed $key The unique name of the cache
+     * @return self
+     */
+    public function expire($key): self {
 
-		$files = glob($this -> directory . '*');
-		
-		if(true === is_array($files)) {
+        $files = glob($this -> directory . $this -> generateName($key));
 
-			foreach($files as $file) {
-			  	
-			  	$file 		= new File($file);
-				$expiration = $this -> extractExpiration($file);
+        if(count($files) > 0 && true === is_array($files)) {
 
-				if($expiration -> getTime() <= microtime(true)) {
-					$file -> delete();
-				}
-			}
-		}
-		
-		return $this;
-	}
+            $file = new File($files[0]);
+            $file -> delete();
+        }
+
+        return $this;
+    }
 
 
-	/**
-	 * Resets lifetime of a cached file
-	 * @param mixed $key The unique name of the cache
-	 * @param int $expiration [optional] Time in milliseconds
-	 * @return self
-	 */
-	public function touch($key, int $expiration = null): self {
+    /**
+     * Clears all cache data
+     * @return self
+     */
+    public function clear(): self {
 
-		$files = glob($this -> directory . $this -> generateName($key));
+        $files = glob($this -> directory . '*');
 
-		if(true === is_array($files) && count($files) > 0) {
+        if(true === is_array($files)) {
 
-			$file = new File($files[0]);
-			
-			if(null === $expiration) {
-				
-				$expiration = $this -> extractExpiration($file);
-				$expiration = $expiration -> getExpiration();
-			}
+            foreach($files as $file) {
 
-			$file -> rename($this -> generateName($key, $expiration));
-		}
+                $file = new File($file);
+                $file -> delete();
+            }
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
 
-	/**
-	 * Returns if cache data exists based on a given key
-	 * @param mixed $key The unique name of the cache
-	 * @return bool
-	 */
-	public function exists($key): bool {
+    /**
+     * Clears all expired cache
+     * @return self
+     */
+    public function clearExpired(): self {
 
-		$files = glob($this -> directory . $this -> generateName($key));
+        $files = glob($this -> directory . '*');
 
-		if(true === is_array($files) && count($files) > 0) {
+        if(true === is_array($files)) {
 
-			$file 		= new File($files[0]);
-			$expiration = $this -> extractExpiration($file);
+            foreach($files as $file) {
 
-			if($expiration -> getTime() >= microtime(true)) {
-				return true;
-			}
+                $file 		= new File($file);
+                $expiration = $this -> extractExpiration($file);
 
-			$file -> delete();
-		}
+                if($expiration -> getTime() <= microtime(true)) {
+                    $file -> delete();
+                }
+            }
+        }
 
-		return false;
-	}
-
-
-	/**
-	 * Generates the cache file name
-	 * @param mixed $key The unique name of the cache
-	 * @param int $expiration [optional] Time in milliseconds
-	 * @return string
-	 */
-	private function generateName($key, ?int $expiration = null): string {
-		return md5(serialize($key)) . '-' . ($expiration ? (string) $expiration : '*') . '-' . ($expiration ? (microtime(true) + ($expiration / 1000)) : '*') . $this -> extension;
-	}
+        return $this;
+    }
 
 
-	/**
-	 * Returns the expiration time of cache file
-	 * @param File $file The path of the cache file
-	 * @return Expiration
-	 */
-	private function extractExpiration(File $file): Expiration {
+    /**
+     * Resets lifetime of a cached file
+     * @param mixed $key The unique name of the cache
+     * @param int $expiration [optional] Time in milliseconds
+     * @return self
+     */
+    public function touch($key, int $expiration = null): self {
 
-	    $expiration = new Expiration();
-		$time       = explode('-', $file -> getName());
+        $files = glob($this -> directory . $this -> generateName($key));
 
-		if(count($time) > 2) {
+        if(true === is_array($files) && count($files) > 0) {
+
+            $file = new File($files[0]);
+
+            if(null === $expiration) {
+
+                $expiration = $this -> extractExpiration($file);
+                $expiration = $expiration -> getExpiration();
+            }
+
+            $file -> rename($this -> generateName($key, $expiration));
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Returns if cache data exists based on a given key
+     * @param mixed $key The unique name of the cache
+     * @return bool
+     */
+    public function exists($key): bool {
+
+        $files = glob($this -> directory . $this -> generateName($key));
+
+        if(true === is_array($files) && count($files) > 0) {
+
+            $file 		= new File($files[0]);
+            $expiration = $this -> extractExpiration($file);
+
+            if($expiration -> getTime() >= microtime(true)) {
+                return true;
+            }
+
+            $file -> delete();
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Generates the cache file name
+     * @param mixed $key The unique name of the cache
+     * @param int $expiration [optional] Time in milliseconds
+     * @return string
+     */
+    private function generateName($key, ?int $expiration = null): string {
+        return md5(serialize($key)) . '-' . ($expiration ? (string) $expiration : '*') . '-' . ($expiration ? (microtime(true) + ($expiration / 1000)) : '*') . $this -> extension;
+    }
+
+
+    /**
+     * Returns the expiration time of cache file
+     * @param File $file The path of the cache file
+     * @return Expiration
+     */
+    private function extractExpiration(File $file): Expiration {
+
+        $expiration = new Expiration();
+        $time       = explode('-', $file -> getName());
+
+        if(count($time) > 2) {
 
             $expiration -> setTime((float) $time[2]);
             $expiration -> setExpiration((int) $time[1]);
-		}
-
-        return $expiration;
-	}
-
-
-	/**
-	 * Clears all expired cache files based on a probability
-	 * @return void
-	 */
-	private function garbage(): void {
-
-	    if(0 === $this -> probability) {
-	        return;
         }
 
-		if(1 === mt_rand(1, $this -> probability)) {
-			$this -> clearExpired();
-		}
-	}
+        return $expiration;
+    }
+
+
+    /**
+     * Clears all expired cache files based on a probability
+     * @return void
+     */
+    private function garbage(): void {
+
+        if(0 === $this -> probability) {
+            return;
+        }
+
+        if(1 === mt_rand(1, $this -> probability)) {
+            $this -> clearExpired();
+        }
+    }
 }
